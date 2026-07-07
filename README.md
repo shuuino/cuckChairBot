@@ -4,11 +4,11 @@
 Built with python3 using [discord.py](https://discordpy.readthedocs.io/en/stable/).
 
 ## Bot permissions necessary:
-administrator (for now, I'll do proper permissions at some point)
-message_content intent
+`administrator` (for now, I'll do proper permissions at some point) <br>
+`message_content` intent
 
 
 ## Features:
 - reacts to various keywords such as "yurislopper", "chud", etc
-- has a "yuri" command to send a random attachment from the yuri channel(s)
-- barking & meowing, inspo from https://github.com/yuiyamu/mrrpbot (goated bot)
+- has a yuri command to send a random attachment from the yuri channel(s)
+- barking & meowing, inspo from [yuiyamu/mrrpbot](https://github.com/yuiyamu/mrrpbot) (goated bot)
