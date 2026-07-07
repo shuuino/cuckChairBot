@@ -212,9 +212,3 @@ async def on_message(message):
 
 
 bot.run(TOKEN)
-
-
-
-"""
-cleanup, check gitignore is correct, update requirements, write readme & push
-"""
