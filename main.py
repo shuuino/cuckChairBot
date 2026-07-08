@@ -41,6 +41,12 @@ def server_lock_message(message: discord.Message) -> bool:
     """Safe server lock for on_message."""
     return server_lock_guild_id(message.guild.id if message.guild else None)
 
+async def mod_lock_interaction(interaction: discord.Interaction) -> bool:
+    """lock for slash commands for moderator only commands."""
+    if not (interaction.user.guild_permissions.manage_messages or interaction.user.guild_permissions.administrator): #"Cannot access attribute 'guild_permissions' for class 'User' Attribute 'guild_permissions' is unknown" shhhh little pylance don't you worry i definitely know what i'm doing
+        await interaction.response.send_message(f"You don't have permission to use this command!", ephemeral=True)
+        return False
+    return True
 
 
 
@@ -97,11 +103,9 @@ async def yuri_slash(interaction: discord.Interaction):
 ])
 async def yuri_remove_slash(interaction: discord.Interaction, category: app_commands.Choice[str], link: str):
     """checks if a user has permission to use command (delete messages perm or admin). Then removes line"""
-    if not server_lock_interaction(interaction):
+    if not (server_lock_interaction(interaction) & await mod_lock_interaction(interaction)):
         return
-    if not (interaction.user.guild_permissions.manage_messages or interaction.user.guild_permissions.administrator): #"Cannot access attribute 'guild_permissions' for class 'User' Attribute 'guild_permissions' is unknown" shhhh little pylance don't you worry i definitely know what i'm doing
-        await interaction.response.send_message(f"You don't have permission to use this command!", ephemeral=True)
-        return
+    
     file = YURI_SFW_DB if category.value == "sfw" else YURI_NSFW_DB
 
     async with yuri_db_lock:
@@ -123,6 +127,36 @@ async def yuri_remove_slash(interaction: discord.Interaction, category: app_comm
                 f.write(f"{l}\n")
 
     await interaction.response.send_message(f"Removed link from `{category.value}` database.", ephemeral=True)
+
+
+
+
+
+# -------------------------------------------
+#say command
+@bot.tree.command(name="say", description="say shit fr ong no cap skibidi rizz") # i hate myself
+@app_commands.describe(text="the shit to say, smartass", reply="optional, link of message to reply to")
+async def say(interaction: discord.Interaction, text: str, reply: str):
+    if not (server_lock_interaction(interaction) & await mod_lock_interaction(interaction)):
+        return
+    
+    if reply:
+        parts = reply.split("/")
+        channel_id = int(parts[-2])
+        message_id = int(parts[-1])
+
+        channel = interaction.guild.get_channel(channel_id)
+        if channel is None or not isinstance(channel, discord.abc.Messageable):
+            await interaction.response.send_message("Invalid reply link (channel not found).", ephemeral=True)
+            return
+
+        target_msg = await channel.fetch_message(message_id)
+
+        await interaction.response.send_message("sent", ephemeral=True)
+        await channel.send(text, reference=target_msg)
+    else:
+        await interaction.channel.send(text)
+    await interaction.response.send_message("sent", ephemeral=True)
 
 
 
