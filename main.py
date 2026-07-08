@@ -136,7 +136,7 @@ async def yuri_remove_slash(interaction: discord.Interaction, category: app_comm
 #say command
 @bot.tree.command(name="say", description="say shit fr ong no cap skibidi rizz") # i hate myself
 @app_commands.describe(text="the shit to say, smartass", reply="optional, link of message to reply to")
-async def say(interaction: discord.Interaction, text: str, reply: str):
+async def say(interaction: discord.Interaction, text: str, reply: str | None = None):
     if not (server_lock_interaction(interaction) & await mod_lock_interaction(interaction)):
         return
     
