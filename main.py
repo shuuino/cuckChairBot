@@ -7,6 +7,7 @@ from bot_instance import bot, ACTIVITY, TOKEN
 import modules.yuri
 import modules.say
 import modules.reactions
+import modules.x
 
 @bot.event
 async def on_ready():

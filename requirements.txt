@@ -1,1 +1,4 @@
 discord.py>=2.7.1
+yt-dlp
+gallery-dl
+aiohttp

@@ -2,4 +2,3 @@ venv/
 yuri-db.csv
 yuri-nsfw-db.csv
 modules/__pycache__/
-modules/x.py
